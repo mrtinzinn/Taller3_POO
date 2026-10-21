@@ -10,7 +10,7 @@ public abstract class Monstruos {
 	
 	
 	
-	public Monstruos(String tipo, int vida, int velocidad, int fuerza, int resistencia) {
+	public Monstruos(String tipo, int vida, int velocidad, int fuerza, int resistencia ) {
 		this.tipo = tipo;
 		this.vida = vida;
 		this.velocidad = velocidad;
