@@ -20,6 +20,36 @@ public abstract class Monstruos {
 
 
 
+	public String getTipo() {
+		return tipo;
+	}
+
+
+
+	public int getVida() {
+		return vida;
+	}
+
+
+
+	public int getVelocidad() {
+		return velocidad;
+	}
+
+
+
+	public int getFuerza() {
+		return fuerza;
+	}
+
+
+
+	public int getResistencia() {
+		return resistencia;
+	}
+	
+
+
 	
 
 }
