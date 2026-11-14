@@ -1,267 +1,271 @@
 
 package taller03;
 
-// Martin Hofer Ochoa - 22.368.055-0 - ICCI
-
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class App {
 
-    public static Scanner scanner = new Scanner(System.in);
+	public static Scanner scanner = new Scanner(System.in);
+	public static Sistema sistema = new Sistema();
 
-    public static ArrayList<Monstruos> mounstros = new ArrayList<>();
-    public static ArrayList<Jugador> jugadores = new ArrayList<>();
+	public static void main(String[] args) {
 
-    public static void main(String[] args) {
+		System.out.println("Cargando archivos...");
 
-        System.out.println("Cargando archivos...");
+		CargarArchivo();
+		CargarJugadores();
 
-        CargarArchivo();
-        CargarJugadores();
+		System.out.println();
+		System.out.println("> " + sistema.cantidadMonstruos() + " monstruos cargados.");
 
-        System.out.println("> " + mounstros.size()
-                + " cargados desde Monstruos.txt");
+		System.out.println("> " + sistema.cantidadJugadores() + " jugadores cargados.");
 
-        System.out.println("> " + jugadores.size()
-                + " cargados desde Registros.txt");
+		if (sistema.cantidadMonstruos() == 0) {
 
-        if (mounstros.isEmpty()) {
-            System.out.println("No hay monstruos disponibles.");
-            System.out.println("El programa se cerrara.");
-            return;
-        }
+			System.out.println("No hay monstruos disponibles.");
+			return;
+		}
 
-        System.out.println("Archivos cargados correctamente.");
-    }
+		boolean programaActivo = true;
 
-    private static void CargarJugadores() {
+		while (programaActivo) {
 
-        File arch = new File("txt/Registros.txt");
+			String nombre = iniciarSesion();
 
-        try (Scanner sFile = new Scanner(arch)) {
+			boolean sesionActiva = true;
 
-            int numeroLinea = 0;
+			while (sesionActiva) {
 
-            while (sFile.hasNextLine()) {
+				int opcion = menuPrincipal();
 
-                String linea = sFile.nextLine();
-                numeroLinea++;
+				switch (opcion) {
 
-                if (linea.trim().equals("")) {
-                    continue;
-                }
+				case 1:
+					System.out.println("Minijuegos proximamente.");
+					break;
 
-                String[] partes = linea.split(";", -1);
+				case 2:
+					System.out.println("===== CATALOGO DE MONSTRUOS =====");
+					System.out.println(sistema.mostrarCatalogo());
+					break;
 
-                if (partes.length != 2) {
-                    System.out.println("Linea " + numeroLinea
-                            + ": debe tener nombre y puntaje.");
-                    continue;
-                }
+				case 3:
+					System.out.println("Historial proximamente.");
+					break;
 
-                String nombre = partes[0].trim();
-                String puntajeTexto = partes[1].trim();
+				case 4:
+					System.out.println("Ranking proximamente.");
+					break;
 
-                if (nombre.equals("")) {
-                    System.out.println("Linea " + numeroLinea
-                            + ": el nombre esta vacio.");
-                    continue;
-                }
+				case 5:
+					System.out.println("Sesion finalizada: " + nombre);
+					sesionActiva = false;
+					break;
 
-                try {
+				case 6:
+					System.out.println("Gracias por jugar Spooky Season.");
+					sesionActiva = false;
+					programaActivo = false;
+					break;
 
-                    int puntajeMax = Integer.parseInt(puntajeTexto);
+				default:
+					System.out.println("Opcion no valida.");
+					break;
+				}
+			}
+		}
+	}
 
-                    if (puntajeMax >= 0) {
+	public static void CargarArchivo() {
 
-                        Jugador j = new Jugador(nombre, puntajeMax);
-                        jugadores.add(j);
+		File arch = new File("txt/Monstruos.txt");
 
-                    } else {
+		try (Scanner sFile = new Scanner(arch)) {
 
-                        System.out.println("Linea " + numeroLinea
-                                + ": el puntaje no puede ser negativo.");
-                    }
+			int numeroLinea = 0;
 
-                } catch (NumberFormatException e) {
+			while (sFile.hasNextLine()) {
 
-                    System.out.println("Linea " + numeroLinea
-                            + ": el puntaje no es un numero valido.");
-                }
-            }
+				String linea = sFile.nextLine();
+				numeroLinea++;
 
-        } catch (FileNotFoundException e) {
+				if (linea.trim().equals("")) {
+					continue;
+				}
 
-            System.out.println("No se encontro Registros.txt.");
-            System.out.println("Se iniciara sin jugadores registrados.");
-        }
-    }
+				String[] partes = linea.split(";", -1);
 
-    private static void CargarArchivo() {
+				System.out.print("Linea " + numeroLinea + ": ");
 
-        File arch = new File("txt/Monstruos.txt");
+				boolean resultado = sistema.crearMonstruo(partes);
 
-        try (Scanner sFile = new Scanner(arch)) {
+				if (resultado) {
+					System.out.println("Monstruo cargado correctamente.");
+				}
+			}
 
-            int numeroLinea = 0;
+		} catch (FileNotFoundException e) {
 
-            while (sFile.hasNextLine()) {
+			System.out.println("No se pudo cargar el archivo de Monstruos.");
+		}
+	}
 
-                String linea = sFile.nextLine();
-                numeroLinea++;
+	public static String iniciarSesion() {
 
-                if (linea.trim().equals("")) {
-                    continue;
-                }
+		String nombre = "";
 
-                String[] partes = linea.split(";", -1);
+		while (nombre.equals("")) {
 
-                for (int i = 0; i < partes.length; i++) {
-                    partes[i] = partes[i].trim();
-                }
+			System.out.println();
+			System.out.println("=== SPOOKY SEASON ===");
+			System.out.print("Ingrese su nombre: ");
 
-                String tipo = partes[0];
-                int cantidad = 0;
+			nombre = scanner.nextLine().trim();
 
-                switch (tipo) {
+			if (nombre.equals("") || nombre.contains(";")) {
 
-                case "Zombi":
-                case "Momia":
-                    cantidad = 6;
-                    break;
+				System.out.println("Nombre no valido.");
+				nombre = "";
+			}
+		}
 
-                case "Vampiro":
-                case "HombreLobo":
-                    cantidad = 7;
-                    break;
+		return nombre;
+	}
 
-                default:
-                    System.out.println("Linea " + numeroLinea
-                            + ": tipo de monstruo desconocido.");
-                    continue;
-                }
+	public static int menuPrincipal() {
 
-                if (partes.length != cantidad) {
+		System.out.println();
+		System.out.println("===== MENU PRINCIPAL =====");
+		System.out.println("1. Jugar un minijuego");
+		System.out.println("2. Ver catalogo de monstruos");
+		System.out.println("3. Ver historial");
+		System.out.println("4. Ver ranking");
+		System.out.println("5. Terminar sesion");
+		System.out.println("6. Salir del programa");
+		System.out.print("Seleccione una opcion: ");
 
-                    System.out.println("Linea " + numeroLinea
-                            + ": cantidad de datos incorrecta para " + tipo);
-                    continue;
-                }
+		try {
 
-                try {
+			int opcion = Integer.parseInt(scanner.nextLine());
+			return opcion;
 
-                    int vida = Integer.parseInt(partes[1]);
-                    int velocidad = Integer.parseInt(partes[2]);
-                    int fuerza = Integer.parseInt(partes[3]);
-                    int resistencia = Integer.parseInt(partes[4]);
+		} catch (NumberFormatException e) {
 
-                    // Validacion de atributos generales
+			return 0;
+		}
+	}
 
-                    if (vida < 1 || vida > 200 ||
-                        velocidad < 1 || velocidad > 100 ||
-                        fuerza < 1 || fuerza > 100 ||
-                        resistencia < 1 || resistencia > 100) {
+	public static void jugarMinijuego() {
 
-                        System.out.println("Linea " + numeroLinea
-                                + ": atributos generales fuera de rango.");
-                        continue;
-                    }
+		System.out.println();
+		System.out.println("===== MINIJUEGOS =====");
 
-                    switch (tipo) {
+		for (int i = 0; i < sistema.getMinijuegos().size(); i++) {
 
-                    case "Zombi": {
+			Minijuego juego = sistema.getMinijuegos().get(i);
 
-                        int fuerzaMordida = Integer.parseInt(partes[5]);
+			System.out.println((i + 1) + ". " + juego.getNombre());
+		}
 
-                        if (fuerzaMordida < 1 || fuerzaMordida > 100) {
+		System.out.print("Seleccione un minijuego (0 para volver): ");
 
-                            System.out.println("Linea " + numeroLinea
-                                    + ": fuerza de mordida fuera de rango.");
-                            continue;
-                        }
+		int opcion;
 
-                        Zombie z = new Zombie(tipo, vida, velocidad,
-                                fuerza, resistencia, fuerzaMordida);
+		try {
+			opcion = Integer.parseInt(scanner.nextLine());
+		} catch (NumberFormatException e) {
+			System.out.println("Debe ingresar un numero.");
+			return;
+		}
 
-                        mounstros.add(z);
-                        break;
-                    }
+		if (opcion == 0) {
+			return;
+		}
 
-                    case "Vampiro": {
+		int posicionJuego = opcion - 1;
 
-                        int velocidadVuelo = Integer.parseInt(partes[5]);
-                        int resistenciaSol = Integer.parseInt(partes[6]);
+		if (!sistema.minijuegoDisponible(posicionJuego)) {
+			System.out.println("Minijuego no disponible o ya jugado.");
+			return;
+		}
 
-                        if (velocidadVuelo < 1 || velocidadVuelo > 100 ||
-                            resistenciaSol < 1 || resistenciaSol > 100) {
+		System.out.println();
+		System.out.println("===== MONSTRUOS =====");
 
-                            System.out.println("Linea " + numeroLinea
-                                    + ": atributos de vampiro fuera de rango.");
-                            continue;
-                        }
+		for (int i = 0; i < sistema.getMonstruos().size(); i++) {
 
-                        Vampiro v = new Vampiro(tipo, vida, velocidad,
-                                fuerza, resistencia, velocidadVuelo,
-                                resistenciaSol);
+			Monstruos m = sistema.getMonstruos().get(i);
 
-                        mounstros.add(v);
-                        break;
-                    }
+			System.out.println((i + 1) + ". " + m.getTipo());
+		}
 
-                    case "Momia": {
+		System.out.print("Seleccione un monstruo (0 para volver): ");
 
-                        int longitudVendajes = Integer.parseInt(partes[5]);
+		try {
+			opcion = Integer.parseInt(scanner.nextLine());
+		} catch (NumberFormatException e) {
+			System.out.println("Debe ingresar un numero.");
+			return;
+		}
 
-                        if (longitudVendajes < 1 || longitudVendajes > 300) {
+		if (opcion == 0) {
+			return;
+		}
 
-                            System.out.println("Linea " + numeroLinea
-                                    + ": longitud de vendajes fuera de rango.");
-                            continue;
-                        }
+		int posicionMonstruo = opcion - 1;
 
-                        Momia m = new Momia(tipo, vida, velocidad,
-                                fuerza, resistencia, longitudVendajes);
+		if (!sistema.monstruoDisponible(posicionMonstruo)) {
+			System.out.println("Monstruo no disponible o ya utilizado.");
+			return;
+		}
 
-                        mounstros.add(m);
-                        break;
-                    }
+		Minijuego juego = sistema.getMinijuegos().get(posicionJuego);
+		Monstruos monstruo = sistema.getMonstruos().get(posicionMonstruo);
 
-                    case "HombreLobo": {
+		System.out.println();
+		System.out.println("Minijuego seleccionado: " + juego.getNombre());
+		System.out.println("Monstruo seleccionado: " + monstruo.getTipo());
 
-                        int ferocidad = Integer.parseInt(partes[5]);
-                        int faseLunar = Integer.parseInt(partes[6]);
+		double potencial = juego.calcularPotencial(monstruo);
 
-                        if (ferocidad < 1 || ferocidad > 100 ||
-                            faseLunar < 1 || faseLunar > 4) {
+		System.out.println("Potencial calculado: " + potencial);
+	}
 
-                            System.out.println("Linea " + numeroLinea
-                                    + ": atributos de hombre lobo fuera de rango.");
-                            continue;
-                        }
+	public static void CargarJugadores() {
 
-                        HombreLobo h = new HombreLobo(tipo, vida,
-                                velocidad, fuerza, resistencia,
-                                ferocidad, faseLunar);
+		File arch = new File("txt/Registros.txt");
 
-                        mounstros.add(h);
-                        break;
-                    }
+		try (Scanner sFile = new Scanner(arch)) {
 
-                    }
+			int numeroLinea = 0;
 
-                } catch (NumberFormatException e) {
+			while (sFile.hasNextLine()) {
 
-                    System.out.println("Linea " + numeroLinea
-                            + ": hay un dato que no es un numero.");
-                }
-            }
+				String linea = sFile.nextLine();
+				numeroLinea++;
 
-        } catch (FileNotFoundException e) {
+				if (linea.trim().equals("")) {
+					continue;
+				}
 
-            System.out.println("No se pudo cargar el archivo de Monstruos.");
-        }
-    }
+				String[] partes = linea.split(";", -1);
+
+				System.out.print("Linea " + numeroLinea + ": ");
+
+				boolean resultado = sistema.crearJugador(partes);
+
+				if (resultado) {
+					System.out.println("Jugador cargado correctamente.");
+				}
+			}
+
+		} catch (FileNotFoundException e) {
+
+			System.out.println("No se encontro Registros.txt.");
+			System.out.println("Se iniciara sin jugadores registrados.");
+		}
+	}
+
 }

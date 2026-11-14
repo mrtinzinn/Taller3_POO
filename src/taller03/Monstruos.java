@@ -18,7 +18,7 @@ public abstract class Monstruos {
 		this.resistencia = resistencia;
 	}
 
-
+	public abstract double aceptar(VisitorMinijuego visitor);
 
 	public String getTipo() {
 		return tipo;

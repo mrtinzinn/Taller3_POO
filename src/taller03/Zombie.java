@@ -1,6 +1,6 @@
 package taller03;
 
-public class Zombie extends Monstruos{
+public class Zombie extends Monstruos implements Mordedor,Regenerable{
 	
 	private int fuerzaMordida;
 
@@ -11,6 +11,23 @@ public class Zombie extends Monstruos{
 
 	public int getFuerzaMordida() {
 		return fuerzaMordida;
+	}
+
+	@Override
+	public String regenerarse() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String morder() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public double aceptar(VisitorMinijuego visitor) {
+		return visitor.visitar(this);
 	}
 	
 	
