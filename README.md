@@ -7,6 +7,7 @@
 **Universidad:** Universidad Católica del Norte (UCN)  
 **Estudiante:** Martin Hofer Ochoa  
 **Lenguaje:** Java
+**Usuario GitHub:** mrtinzinn
 
 ---
 
