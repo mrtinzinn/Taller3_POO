@@ -4,6 +4,9 @@ package taller03;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
+import java.io.FileWriter;
+import java.io.BufferedWriter;
+import java.io.IOException;
 
 public class App {
 
@@ -34,6 +37,8 @@ public class App {
 
 			String nombre = iniciarSesion();
 
+			sistema.iniciarPartida();
+
 			boolean sesionActiva = true;
 
 			while (sesionActiva) {
@@ -43,7 +48,7 @@ public class App {
 				switch (opcion) {
 
 				case 1:
-					System.out.println("Minijuegos proximamente.");
+					jugarMinijuego();
 					break;
 
 				case 2:
@@ -52,24 +57,47 @@ public class App {
 					break;
 
 				case 3:
-					System.out.println("Historial proximamente.");
+					System.out.println("===== HISTORIAL =====");
+					System.out.println(sistema.mostrarHistorial());
 					break;
 
 				case 4:
-					System.out.println("Ranking proximamente.");
+					System.out.println();
+					System.out.println("===== RANKING DE JUGADORES =====");
+					System.out.println(sistema.mostrarRanking());
 					break;
 
 				case 5:
-					System.out.println("Sesion finalizada: " + nombre);
+
+					System.out.println();
+					System.out.println("===== FIN DE SESION =====");
+
+					System.out.println("Jugador: " + nombre);
+					System.out.println("Puntaje obtenido: " + sistema.getPuntajeSesion());
+
+					String resultado = sistema.finalizarPartida(nombre);
+
+					System.out.println(resultado);
+
+					guardarJugadores();
+
 					sesionActiva = false;
 					break;
 
 				case 6:
+
+					System.out.println();
+					System.out.println("===== FIN DEL JUEGO =====");
+
+					System.out.println(sistema.finalizarPartida(nombre));
+
+					guardarJugadores();
+
 					System.out.println("Gracias por jugar Spooky Season.");
+
 					sesionActiva = false;
 					programaActivo = false;
 					break;
-
 				default:
 					System.out.println("Opcion no valida.");
 					break;
@@ -103,7 +131,10 @@ public class App {
 
 				if (resultado) {
 					System.out.println("Monstruo cargado correctamente.");
+				} else {
+					System.out.println(sistema.getUltimoError());
 				}
+
 			}
 
 		} catch (FileNotFoundException e) {
@@ -230,7 +261,21 @@ public class App {
 
 		double potencial = juego.calcularPotencial(monstruo);
 
-		System.out.println("Potencial calculado: " + potencial);
+		int puntaje = sistema.calcularPuntaje(posicionJuego, posicionMonstruo);
+
+		String habilidad = sistema.obtenerHabilidad(posicionJuego, posicionMonstruo);
+
+		sistema.registrarPartida(posicionJuego, posicionMonstruo, puntaje);
+
+		System.out.println();
+		System.out.println("===== RESULTADO =====");
+		System.out.println("Minijuego: " + juego.getNombre());
+		System.out.println("Monstruo: " + monstruo.getTipo());
+		System.out.println("Habilidad: " + habilidad);
+		System.out.println("Potencial: " + potencial);
+		System.out.println("Puntaje obtenido: " + puntaje);
+		System.out.println("Puntaje total: " + sistema.getPuntajeSesion());
+
 	}
 
 	public static void CargarJugadores() {
@@ -258,13 +303,41 @@ public class App {
 
 				if (resultado) {
 					System.out.println("Jugador cargado correctamente.");
+				} else {
+					System.out.println(sistema.getUltimoError());
 				}
+
 			}
 
 		} catch (FileNotFoundException e) {
 
 			System.out.println("No se encontro Registros.txt.");
 			System.out.println("Se iniciara sin jugadores registrados.");
+		}
+	}
+
+	public static void guardarJugadores() {
+
+		try {
+
+			FileWriter archivo = new FileWriter("txt/Registros.txt");
+			BufferedWriter escritor = new BufferedWriter(archivo);
+
+			for (int i = 0; i < sistema.getJugadores().size(); i++) {
+
+				Jugador j = sistema.getJugadores().get(i);
+
+				escritor.write(j.getNombre() + ";" + j.getPuntajeMax());
+				escritor.newLine();
+			}
+
+			escritor.close();
+
+			System.out.println("Registros guardados correctamente.");
+
+		} catch (IOException e) {
+
+			System.out.println("Error al guardar los registros.");
 		}
 	}
 

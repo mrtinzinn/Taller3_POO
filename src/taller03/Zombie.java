@@ -15,14 +15,12 @@ public class Zombie extends Monstruos implements Mordedor,Regenerable{
 
 	@Override
 	public String regenerarse() {
-		// TODO Auto-generated method stub
-		return null;
+		return "El zombi comienza a regenerarse.";
 	}
 
 	@Override
 	public String morder() {
-		// TODO Auto-generated method stub
-		return null;
+		return "El zombi utiliza su poderosa mordida.";
 	}
 
 	@Override

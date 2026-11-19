@@ -20,14 +20,12 @@ public class Vampiro extends Monstruos implements Mordedor,Volador{
 
 	@Override
 	public String volar() {
-		// TODO Auto-generated method stub
-		return null;
+		return "El vampiro despliega sus alas y comienza a volar.";
 	}
 
 	@Override
 	public String morder() {
-		// TODO Auto-generated method stub
-		return null;
+		return "El vampiro utiliza su poderosa mordida.";
 	}
 
 	@Override

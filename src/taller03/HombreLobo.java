@@ -17,13 +17,11 @@ public class HombreLobo extends Monstruos implements Mordedor,Furioso{
 	}
 	@Override
 	public String enfurecerse() {
-		// TODO Auto-generated method stub
-		return null;
+		return "El hombre lobo se ha enfurecido!";
 	}
 	@Override
 	public String morder() {
-		// TODO Auto-generated method stub
-		return null;
+		return "El hombre lobo utiliza su poderosa mordida.";
 	}
 	@Override
 	public double aceptar(VisitorMinijuego visitor) {

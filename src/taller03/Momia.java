@@ -15,14 +15,12 @@ public class Momia extends Monstruos implements Regenerable,Furioso{
 
 	@Override
 	public String enfurecerse() {
-		// TODO Auto-generated method stub
-		return null;
+		return "La momia se ha enfurecido!";
 	}
 
 	@Override
 	public String regenerarse() {
-		// TODO Auto-generated method stub
-		return null;
+		return "La momia empieza a regenerarse.";
 	}
 
 	@Override

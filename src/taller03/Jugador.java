@@ -3,7 +3,7 @@ package taller03;
 public class Jugador {
 	private String nombre;
 	private int puntajeMax;
-	
+
 	public Jugador(String nombre, int puntajeMax) {
 		this.nombre = nombre;
 		this.puntajeMax = puntajeMax;
@@ -16,5 +16,9 @@ public class Jugador {
 	public int getPuntajeMax() {
 		return puntajeMax;
 	}
-	
+
+	public void setPuntajeMax(int puntajeMax) {
+		this.puntajeMax = puntajeMax;
+	}
+
 }
